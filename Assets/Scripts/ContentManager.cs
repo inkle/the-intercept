@@ -40,10 +40,6 @@ public class ContentManager : UIMonoBehaviour, IBeginDragHandler {
 		}
 	}
 
-	private float clickDistance = 0;
-	public float clickInterval = 4;
-	private float velocity = 0;
-
 	bool showChoices;
 	public float scrollDistanceUntilHidingChoices = 100;
 
@@ -147,12 +143,5 @@ public class ContentManager : UIMonoBehaviour, IBeginDragHandler {
 			return;
 		else if (scrollRect.content.anchoredPosition.y <= minY && eventData.delta.y < 0)
 			return;
-		clickDistance += Mathf.Abs(eventData.delta.y);
-		if(clickDistance > clickInterval) {
-			clickDistance = -clickInterval;
-			velocity += clickDistance;
-			AudioClipDatabase.Instance.PlayWindingSound(Mathf.Lerp(0.125f,0.45f, velocity * 0.5f));
-			velocity = Mathf.Lerp(0, velocity, Time.deltaTime * 4);
-		}
 	}
 }
