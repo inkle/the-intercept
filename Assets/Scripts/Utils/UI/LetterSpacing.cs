@@ -6,7 +6,7 @@ using System.Collections.Generic;
 /*
 http://forum.unity3d.com/threads/adjustable-character-spacing-free-script.288277/
  
-Unity 5.1 and 5.2.2+ compatible
+Unity 5.2.2+ compatible
  
 Produces an simple tracking/letter-spacing effect on UI Text components.
 Set the spacing parameter to adjust letter spacing.
