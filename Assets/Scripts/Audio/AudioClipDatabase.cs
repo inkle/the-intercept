@@ -30,6 +30,12 @@ public class AudioClipDatabase : MonoSingleton<AudioClipDatabase> {
 	}
 
 	private void PlaySound (AudioClip audioClip, float volume = 1) {
-		AudioSource.PlayClipAtPoint(audioClip, Vector3.zero, volume);
+		GameObject tempGO = new GameObject("Audio: "+audioClip.name); // create the temp object
+		tempGO.transform.SetParent(transform);
+		AudioSource audioSource = tempGO.AddComponent<AudioSource>(); // add an audio source
+		audioSource.clip = audioClip; // define the clip
+		audioSource.spatialBlend = 0;
+		audioSource.Play(); // start the sound
+		Destroy(tempGO, audioClip.length); // destroy object after clip duration
 	}
 }
