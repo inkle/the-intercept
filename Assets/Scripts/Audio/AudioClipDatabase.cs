@@ -4,21 +4,11 @@ using System.Collections.Generic;
 
 public class AudioClipDatabase : MonoSingleton<AudioClipDatabase> {
 	public List<AudioClip> keySounds;
-	public List<AudioClip> carriageReturnSounds;
-	public List<AudioClip> windingClicks;
 	public AudioClip attachingPaperSound;
 	public AudioClip horrorSting;
 
 	public void PlayKeySound () {
 		PlaySound(keySounds[Random.Range(0, keySounds.Count)]);
-	}
-
-	public void PlayCarriageReturnSound () {
-		PlaySound(carriageReturnSounds[Random.Range(0, carriageReturnSounds.Count)]);
-	}
-
-	public void PlayWindingSound (float volume) {
-		PlaySound(windingClicks[Random.Range(0, windingClicks.Count)], volume);
 	}
 
 	public void PlayAttachingPaperSound () {
