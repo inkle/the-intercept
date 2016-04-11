@@ -15,7 +15,19 @@ namespace Ink.UnityIntegration {
 		private TextAsset storyJSONTextAsset;
 		private string storyJSON;
 		private Story story;
-		private TextAsset storyStateTextAsset;
+		private TextAsset _storyStateTextAsset;
+		private TextAsset storyStateTextAsset {
+			get {
+				return _storyStateTextAsset;
+			} set {
+				if(_storyStateTextAsset == value) 
+					return;
+				_storyStateTextAsset = value;
+				if(_storyStateTextAsset != null)
+					storyStateValid = InkEditorUtils.CheckStoryStateIsValid(storyJSONTextAsset.text, storyStateTextAsset.text);
+			}
+		}
+
 		private UndoHistory<InkPlayerHistoryItem> storyStateHistory;
 		private List<InkPlayerHistoryContentItem> storyHistory;
 		private bool displayChoicesInLog = false;
@@ -27,8 +39,12 @@ namespace Ink.UnityIntegration {
 		private Vector2 contentScrollPosition;
 		bool showingChoicesPanel = true;
 		bool showingSaveLoadPanel;
+		bool showingDivertsPanel;
+		private Vector2 divertsScrollPosition;
 		bool showingVariablesPanel;
 		private Vector2 variablesScrollPosition;
+
+		private string divertCommand;
 
 		private Exception errors;
 		bool storyStateValid = false;
@@ -68,21 +84,12 @@ namespace Ink.UnityIntegration {
 		}
 
 		void Play (TextAsset storyJSONTextAsset) {
-			Debug.Log(storyJSONTextAsset.text);
 			if(!InkEditorUtils.CheckStoryIsValid(storyJSONTextAsset.text, out errors))
 				return;
-			Debug.Log(storyJSONTextAsset.text);
 			this.storyJSONTextAsset = storyJSONTextAsset;
 			storyJSON = this.storyJSONTextAsset.text;
-			story = new Story(storyJSON);
-			story.allowExternalFunctionFallbacks = true;
-			if(continueAutomatically) {
-				while (story.canContinue) {
-					ContinueStory();
-				}
-			} else {
-				ContinueStory();
-			}
+			InitStory();
+			TryContinue();
 		}
 
 		void Play (string storyJSON) {
@@ -90,15 +97,13 @@ namespace Ink.UnityIntegration {
 				return;
 			this.storyJSONTextAsset = null;
 			this.storyJSON = storyJSON;
-			story = new Story(this.storyJSON);
+			InitStory();
+			TryContinue();
+		}
+
+		void InitStory () {
+			story = new Story(storyJSON);
 			story.allowExternalFunctionFallbacks = true;
-			if(continueAutomatically) {
-				while (story.canContinue) {
-					ContinueStory();
-				}
-			} else {
-				ContinueStory();
-			}
 		}
 		
 		void Stop () {
@@ -117,7 +122,6 @@ namespace Ink.UnityIntegration {
 		
 		void ContinueStory () {
 			story.Continue();
-			Debug.Log(story.currentText);
 			storyHistory.Add(new InkPlayerHistoryContentItem(story.currentText.Trim()));
 			ScrollToBottom();
 			AddToHistory();
@@ -156,7 +160,17 @@ namespace Ink.UnityIntegration {
 			contentScrollPosition.y = Mathf.Infinity;
 		}
 
-
+		void TryContinue () {
+			if(!story.canContinue) 
+				return;
+			if(continueAutomatically) {
+				while (story.canContinue) {
+					ContinueStory();
+				}
+			} else {
+				ContinueStory();
+			}
+		}
 		
 		void OnGUI () {
 			this.Repaint();
@@ -188,6 +202,13 @@ namespace Ink.UnityIntegration {
 			EditorGUILayout.EndHorizontal();
 			if(showingSaveLoadPanel)
 				DisplaySaveLoad ();
+
+			EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+			showingDivertsPanel = EditorGUILayout.Foldout(showingDivertsPanel, "Diverts");
+			EditorGUILayout.EndHorizontal();
+			if(showingDivertsPanel)
+				DisplayDiverts ();
+
 			if(InkEditorUtils.StoryContainsVariables(story)) {
 				EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
 				showingVariablesPanel = EditorGUILayout.Foldout(showingVariablesPanel, "Variables");
@@ -307,15 +328,7 @@ namespace Ink.UnityIntegration {
 						storyHistory.Add(new InkPlayerHistoryContentItem(choice.text.Trim(), true));
 						story.ChooseChoiceIndex(choice.index);
 						AddToHistory();
-						if(story.canContinue) {
-							if(continueAutomatically) {
-								while (story.canContinue) {
-									ContinueStory();
-								}
-							} else {
-								ContinueStory();
-							}
-						}
+						TryContinue();
 					}
 				}
 			} else {
@@ -326,7 +339,7 @@ namespace Ink.UnityIntegration {
 		}
 
 		void DisplaySaveLoad () {
-			GUILayout.BeginVertical(GUI.skin.box);
+			GUILayout.BeginVertical();
 
 			EditorGUILayout.BeginHorizontal();
 			string currentStateJSON = story.state.ToJson();
@@ -344,18 +357,29 @@ namespace Ink.UnityIntegration {
 			EditorGUILayout.BeginHorizontal();
 			EditorGUI.BeginChangeCheck();
 			storyStateTextAsset = EditorGUILayout.ObjectField("Load Story State JSON File", storyStateTextAsset, typeof(TextAsset), false) as TextAsset;
-			if (EditorGUI.EndChangeCheck() && storyStateTextAsset != null) {
-				storyStateValid = InkEditorUtils.CheckStoryStateIsValid(storyJSONTextAsset.text, storyStateTextAsset.text);
-			}
-			if(storyStateTextAsset != null && !storyStateValid) {
-				EditorGUILayout.HelpBox("Story state file is not valid.", MessageType.Error);
-			}
 			EditorGUI.BeginDisabledGroup(storyStateTextAsset == null);
 			if (GUILayout.Button("Load")) {
 				LoadStoryState(storyStateTextAsset.text);
 			}
 			EditorGUI.EndDisabledGroup();
 			EditorGUILayout.EndHorizontal();
+			if(storyStateTextAsset != null && !storyStateValid) {
+				EditorGUILayout.HelpBox("Loaded story state file is not valid.", MessageType.Error);
+			}
+			GUILayout.EndVertical();
+		}
+
+		void DisplayDiverts () {
+			GUILayout.BeginVertical();
+//			divertsScrollPosition = EditorGUILayout.BeginScrollView(divertsScrollPosition);
+			divertCommand = EditorGUILayout.TextField("Divert command", divertCommand);
+			EditorGUI.BeginDisabledGroup(divertCommand == null || divertCommand == "");
+			if (GUILayout.Button("Divert")) {
+				story.ChoosePathString(divertCommand);
+				TryContinue();
+			}
+			EditorGUI.EndDisabledGroup();
+//			EditorGUILayout.EndScrollView();
 			GUILayout.EndVertical();
 		}
 
