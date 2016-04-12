@@ -67,7 +67,7 @@ public class ContentManager : UIMonoBehaviour, IBeginDragHandler {
 		paperImage.rectTransform.anchoredPosition = new Vector2(paperImage.rectTransform.anchoredPosition.x, 0);
 	}
 
-	public void ScrollToBottom (float time = 1.4f) {
+	public void ScrollToBottom (float time = 2f) {
 		Vector2 targetScroll = new Vector2(scrollRect.content.anchoredPosition.x, scrollRect.content.sizeDelta.y - paperBottomOffset);
 		tween.Tween(scrollRect.content.anchoredPosition, targetScroll, time, AnimationCurve.EaseInOut(0,0,1,1));
 	}
@@ -111,6 +111,8 @@ public class ContentManager : UIMonoBehaviour, IBeginDragHandler {
 		layoutGroup.padding = new RectOffset(layoutGroup.padding.left, layoutGroup.padding.right, Mathf.RoundToInt(canvasHeight * paperTopSpacingCanvasHeightFraction), Mathf.RoundToInt(canvasHeight * paperBottomSpacingCanvasHeightFraction) + paperBottomOffset);
 		paperImage.rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, Mathf.Max(rectTransform.sizeDelta.y, paperImage.sprite.texture.height));
 		paperImage.rectTransform.anchoredPosition = new Vector2(paperImage.rectTransform.anchoredPosition.x, paperImage.rectTransform.sizeDelta.y * 0.5f);
+		// A hack to prevent the paper appearing on the first frame when we enter game mode
+		paperImage.enabled = paperImage.rectTransform.sizeDelta.y != paperImage.sprite.texture.height;
 	}
 
 	void ClampScrollRect () {

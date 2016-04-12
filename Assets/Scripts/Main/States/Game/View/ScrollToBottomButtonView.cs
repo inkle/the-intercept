@@ -32,6 +32,6 @@ public class ScrollToBottomButtonView : MonoBehaviour {
 	}
 
 	public void OnClick () {
-		Main.Instance.gameState.contentManager.ScrollToBottom(0.8f);
+		Main.Instance.gameState.contentManager.ScrollToBottom(1f);
 	}
 }
