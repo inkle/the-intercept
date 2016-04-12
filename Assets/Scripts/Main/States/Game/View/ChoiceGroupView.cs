@@ -58,7 +58,6 @@ public class ChoiceGroupView : UIMonoBehaviour {
 	IEnumerator FadeOutAndContinue (Choice choice) {
 		foreach (ChoiceView choiceView in choiceViews) {
 			choiceView.StopAllCoroutines();
-			choiceView.button.enabled = false;
 			if(choiceView.choice == choice)
 				choiceView.button.interactable = false;
 			else
@@ -68,7 +67,8 @@ public class ChoiceGroupView : UIMonoBehaviour {
 			if(choiceView.choice != choice)
 				StartCoroutine(choiceView.FadeOut(0.4f));
 		}
-		yield return new WaitForSeconds (0.25f);
+		if(choiceViews.Count > 1)
+			yield return new WaitForSeconds (0.25f);
 		foreach(ChoiceView choiceView in choiceViews) {
 			if(choiceView.choice == choice)
 				yield return StartCoroutine(choiceView.FadeOut(0.6f));
