@@ -25,7 +25,11 @@
 		}
 	}
 
-	public string Substring(int length) {
+	public string Substring(int startIndex, int length) {
+		if (startIndex != 0) {
+			// We might add support for this case later, but for now, throw an error.
+			throw new System.InvalidOperationException ("startIndex must be 0 for now, sorry!");
+		}
 		return string.Empty;
 	}
 }
