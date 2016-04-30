@@ -18,5 +18,9 @@ public class RichTextSubstringTests {
 		Assert.AreEqual ("<i>foo</i> b", rts.Substring (0, 5));
 		Assert.AreEqual ("<i>foo</i> ba", rts.Substring (0, 6));
 		Assert.AreEqual ("<i>foo</i> bar", rts.Substring (0, 7));
+
+		Assert.AreEqual ("<i>oo</i>", rts.Substring (1, 2));
+		Assert.AreEqual ("<i>o</i>", rts.Substring (1, 1));
+		Assert.AreEqual ("<i>o</i> ba", rts.Substring (2, 4));
 	}
 }
