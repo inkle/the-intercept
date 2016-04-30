@@ -4,6 +4,7 @@ using System.Collections;
 public class ContentView : StoryElementView {
 
 	public TypedText textTyper;
+	private RichTextSubstring richText;
 
 	public Color driedColor;
 	public Color wetColor;
@@ -41,6 +42,7 @@ public class ContentView : StoryElementView {
 			textTyperSettings.defaultTypeDelay = new TypedText.RandomTimeDelay(0.03f,0.0425f);
 		}
 
+		richText = new RichTextSubstring (content);
 		textTyper = new TypedText();
 		textTyper.OnTypeText += OnTypeText;
 		textTyper.OnCompleteTyping += CompleteTyping;
@@ -48,7 +50,7 @@ public class ContentView : StoryElementView {
 	}
 
 	void OnTypeText (string newText) {
-		text.text = textTyper.text;
+		text.text = richText.Substring(0, textTyper.text.Length);
 		if(newText != " ")
 			AudioClipDatabase.Instance.PlayKeySound ();
 	}
