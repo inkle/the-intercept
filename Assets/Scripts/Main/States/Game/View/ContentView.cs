@@ -46,7 +46,7 @@ public class ContentView : StoryElementView {
 		textTyper = new TypedText();
 		textTyper.OnTypeText += OnTypeText;
 		textTyper.OnCompleteTyping += CompleteTyping;
-		textTyper.TypeText(content, textTyperSettings);
+		textTyper.TypeText(richText.plainText, textTyperSettings);
 	}
 
 	void OnTypeText (string newText) {
