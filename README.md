@@ -66,7 +66,7 @@ Notice that underneath the **Open** button in the **Inspector** window is anothe
 
 <img src="https://cloud.githubusercontent.com/assets/124687/15632856/88a32940-256c-11e6-87f5-5d87a7557cdc.png">
 
-This is a really quick way to try out changes to your story without needing to re-play the actual game.
+This is a really quick way to try out changes to your story without needing to re-play the actual game. It also gives you greater visibility into the state of your story, such as the values of its [variables][], which can aid in debugging.
 
 ### Skipping The Intro
 
@@ -99,3 +99,4 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 [GitHub Desktop]: https://desktop.github.com/
 [ink-Unity integration]: https://github.com/inkle/ink-unity-integration
+[variables]: https://github.com/inkle/ink/blob/master/Documentation/WritingWithInk.md#part-3-variables-and-logic
