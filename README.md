@@ -44,9 +44,6 @@ Now that you've got the hang of playing the game in the editor, you might want t
 3. Around line 75 of the ink script, you'll see the game's familiar starting text: `They are keeping me waiting`.  Change this to something else, like `I am a hamburger`:
 
    ```diff
-   --- a/Assets/Ink/TheIntercept.ink
-   +++ b/Assets/Ink/TheIntercept.ink
-   @@ -74,7 +74,7 @@ VAR DEBUG = false
     === start === 
  
     //  Intro
