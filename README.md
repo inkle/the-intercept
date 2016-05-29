@@ -41,7 +41,21 @@ Now that you've got the hang of playing the game in the editor, you might want t
 
    Once you click **Open**, Unity will open the story's ink script in a text editor.
 
-3. Around line 75 of the ink script, you'll see a section called `=== start ===`, and below it will be the game's familiar starting text: `They are keeping me waiting.`.  Change this to something else, like `I am a hamburger.`.
+3. Around line 75 of the ink script, you'll see the game's familiar starting text: `They are keeping me waiting`.  Change this to something else, like `I am a hamburger`:
+
+   ```diff
+   --- a/Assets/Ink/TheIntercept.ink
+   +++ b/Assets/Ink/TheIntercept.ink
+   @@ -74,7 +74,7 @@ VAR DEBUG = false
+    === start === 
+ 
+    //  Intro
+   -	- 	They are keeping me waiting. 
+   +	- 	I am a hamburger. 
+    		*	Hut 14[]. The door was locked after I sat down. 
+    		I don't even have a pen to do any work. There's a copy of the morning's intercept in my pocket, but staring at the jumbled letters will only drive me mad. 
+    		I am not a machine, whatever they say about me.
+   ```
 
 4. Save the file and switch back to Unity. You may briefly see a terminal window open and close itself in an instant: this is just [ink-Unity integration][]'s **Auto Compilation** functionality at work.
 
