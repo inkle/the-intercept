@@ -760,7 +760,7 @@ VAR DEBUG = false
 		"Alone," I add.
 		 -> go_in_alone
 
- 	* { putmein  }  [Wait] 
+ 	* { not putmein  }  [Wait] 
 	 	"No," Harris declares, finally. "I think you're lying about Hooper. I think you're a clever, scheming young man — that's why we hired you — and you're looking for the only reasonable out this situation has to offer. But I'm not taking it. We know you were in the room with the machine, we know you're of a perverted persuasion, we know you have compromised yourself. There's nothing more to say here. Either you tell me what you've done with that component, or we will hang you and search just as hard. It's your choice."
 	 -> harris_threatens_lynching
 
